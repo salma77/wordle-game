@@ -5,11 +5,11 @@ const useWordle = solution => {
   const MAX_GUESSES = 5;
   const [turn, setTurn] = useState(0);
   const [currentGuess, setCurrentGuess] = useState("");
-  const [guesses, setGuesses] = useState([]); // each guess is an array
+  const [guesses, setGuesses] = useState([...Array(6)]); // each guess is an array
   const [history, setHistory] = useState([]); // each guess is a string
   const [isCorrect, setIsCorrect] = useState(false);
 
-  // TODO: format guess into an array of letter objects
+  // format guess into an array of letter objects
   // e.g. [{key: 'a', color: 'yellow'}]
   const formatGuess = () => {
     let solutionArray = [...solution];
@@ -35,10 +35,24 @@ const useWordle = solution => {
 
     return formattedGuess;
   };
-  // TODO: add a new guess to the guesses state
-  // TODO: update the isCorrect state if the guess is correct
-  // TODO: add one to turn state
-  const addNewGuess = () => {};
+  
+  const addNewGuess = formattedGuess => {
+    if (currentGuess === solution) {
+      setIsCorrect(true);
+    }
+    setGuesses(previousGuesses => {
+      let newGuesses = [...previousGuesses];
+      newGuesses[turn] = formattedGuess;
+      return newGuesses;
+    });
+    setHistory(previousHistory => {
+      return [...previousHistory, currentGuess];
+    });
+    setTurn(previousTurn => {
+      return previousTurn + 1;
+    });
+    setCurrentGuess("");
+  };
 
   const handleKeyup = ({ key }) => {
     if (key === "Enter") {
@@ -58,7 +72,7 @@ const useWordle = solution => {
         return;
       }
       const formattedGuess = formatGuess();
-      addNewGuess(formattedGuess)
+      addNewGuess(formattedGuess);
     }
     if (key === "Backspace") {
       setCurrentGuess(previousGuess => {
