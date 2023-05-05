@@ -12,7 +12,28 @@ const useWordle = solution => {
   // TODO: format guess into an array of letter objects
   // e.g. [{key: 'a', color: 'yellow'}]
   const formatGuess = () => {
-    console.log("formatting guess - ", currentGuess)
+    let solutionArray = [...solution];
+    let formattedGuess = [...currentGuess].map(letter => {
+      return { key: letter, color: "grey" };
+    });
+
+    // if letter is green, in the word and in this position
+    formattedGuess.forEach((letter, idx) => {
+      if (solutionArray[idx] === letter.key) {
+        formattedGuess[idx].color = "green";
+        solutionArray[idx] = null;
+      }
+    });
+
+    // if letter is yellow, in the word but not this position
+    formattedGuess.forEach((letter, idx) => {
+      if (solutionArray.includes(letter.key) && letter.color !== "green") {
+        formattedGuess[idx].color = "yellow";
+        solutionArray[solutionArray.indexOf(letter.key)] = null;
+      }
+    });
+
+    return formattedGuess;
   };
   // TODO: add a new guess to the guesses state
   // TODO: update the isCorrect state if the guess is correct
@@ -36,7 +57,8 @@ const useWordle = solution => {
         console.log("length of the word must be 5");
         return;
       }
-      formatGuess()
+      const formattedGuess = formatGuess();
+      addNewGuess(formattedGuess)
     }
     if (key === "Backspace") {
       setCurrentGuess(previousGuess => {
