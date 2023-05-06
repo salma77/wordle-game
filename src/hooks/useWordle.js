@@ -8,13 +8,17 @@ const useWordle = solution => {
   const [guesses, setGuesses] = useState([...Array(6)]); // each guess is an array
   const [history, setHistory] = useState([]); // each guess is a string
   const [isCorrect, setIsCorrect] = useState(false);
+  const [usedKeys, setUsedKeys] = useState({}); // {a: 'yellow', b: 'grey'}
 
   // format guess into an array of letter objects
   // e.g. [{key: 'a', color: 'yellow'}]
   const formatGuess = () => {
     let solutionArray = [...solution];
     let formattedGuess = [...currentGuess].map(letter => {
-      return { key: letter, color: "grey" };
+      return {
+        key: letter,
+        color: "grey"
+      };
     });
 
     // if letter is green, in the word and in this position
@@ -35,7 +39,7 @@ const useWordle = solution => {
 
     return formattedGuess;
   };
-  
+
   const addNewGuess = formattedGuess => {
     if (currentGuess === solution) {
       setIsCorrect(true);
@@ -50,6 +54,31 @@ const useWordle = solution => {
     });
     setTurn(previousTurn => {
       return previousTurn + 1;
+    });
+    setUsedKeys(previousUsedKeys => {
+      let newKeys = { ...previousUsedKeys };
+
+      formattedGuess.forEach(letter => {
+        const currentColor = newKeys[letter.key];
+
+        if (letter.color === "green") {
+          newKeys[letter.key] = "green";
+          return;
+        }
+        if (letter.color === "yellow" && currentColor !== "green") {
+          newKeys[letter.key] = "yellow";
+          return;
+        }
+        if (
+          letter.color === "grey" &&
+          currentColor !== "green" &&
+          currentColor !== "yellow"
+        ) {
+          newKeys[letter.key] = "grey";
+          return;
+        }
+      });
+      return newKeys;
     });
     setCurrentGuess("");
   };
@@ -90,7 +119,7 @@ const useWordle = solution => {
       }
     }
   };
-  return { turn, currentGuess, guesses, isCorrect, handleKeyup };
+  return { turn, currentGuess, guesses, isCorrect, usedKeys, handleKeyup };
 };
 
 export default useWordle;
