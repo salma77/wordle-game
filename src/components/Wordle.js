@@ -15,10 +15,15 @@ export default function Wordle({ solution }) {
   useEffect(
     () => {
       window.addEventListener("keyup", handleKeyup);
-
+      if (isCorrect){
+        window.removeEventListener("keyup", handleKeyup);
+      }
+      if (turn > 5){
+        window.removeEventListener("keyup", handleKeyup);
+      }
       return () => window.removeEventListener("keyup", handleKeyup);
     },
-    [handleKeyup]
+    [handleKeyup, isCorrect, turn]
   );
   return (
     <div>
