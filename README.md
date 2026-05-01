@@ -168,8 +168,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 Found a bug? Have a suggestion? Let me know!
 
 - **GitHub Issues**: [Report a bug](https://github.com/salma77/wordle-game/issues)
-- **Email**: salma@example.com
-- **Twitter**: [@SalmaGames](https://twitter.com)
+- **Email**: salmaabdelfatah77@gmail.com
 
 ---
 
